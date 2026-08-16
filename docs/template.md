@@ -1,0 +1,280 @@
+# Templating Rules
+
+Matchmaker uses a template system for formatting output and executing commands.
+Templates use `{}` placeholders with various modifiers to inject item data.
+
+> [!NOTE]
+> Only valid keys are replaced, invalid keys are left alone. If you need it, you can also escape `{` like `\{`.
+>
+> Templates are expanded in preview layout commands, bound action scripts, and
+> the `output_template` / accept hooks. They are **not** expanded in
+> `start.command` or `envs` values.
+
+## Modifiers
+
+| Modifier | Description                                        |
+| -------- | -------------------------------------------------- |
+| `{}`     | Current item (shell-quoted)                        |
+| `{=}`    | Current item (no quotes)                           |
+| `{+}`    | All selected items (shell-quoted, space-separated) |
+| `{-}`    | All selected items (no quotes, space-separated)    |
+
+*Note: This outputs the original line (after possible trimming and ansi processing), and is not the same as {..} below.*
+
+## Column Specifics
+
+You can specify a column by its name or by its index (starting from 1). `{0}` refers to the primary (default) column.
+
+> [!NOTE]
+> Numeric placeholders are always treated as column indices, even if a column happens to have a matching name.
+> If you are using default column names (when `columns.names` is unspecified), there is no conflict as they are named `1` … `columns.max`, but avoid otherwise using integers for columns names for this reason.
+
+**Note: Column names must be alphanumeric.**
+
+| Placeholder | Description                                       |
+| ----------- | ------------------------------------------------- |
+| `{col}`     | Column `col` of current item (shell-quoted)       |
+| `{=col}`    | Column `col` of current item (raw)                |
+| `{+col}`    | Column `col` of all selected items (shell-quoted) |
+| `{-col}`    | Column `col` of all selected items (raw)          |
+
+> [!TIP]
+>
+> **SHELL QUOTING**
+>
+> - Unix shells: single-quoted (`'foo'`, embedded `'` → `'\''`).
+> - cmd.exe: double-quoted (`"` and `&|<>^%` escaped).
+> - PowerShell: single-quoted (embedded `'` doubled: `''`). An empty column becomes `''` when quoted but nothing when raw.
+
+## Special
+
+`!` refers to the active column.
+`#` refers to the current index.
+
+See examples for more information.
+
+## Command Line Arguments
+
+If you passed trailing arguments to `mm` (after `--`), you can access them in your templates.
+
+| Placeholder | Description                                   |
+| ----------- | --------------------------------------------- |
+| `{$0}`      | All arguments (shell-quoted, space-separated) |
+| `{$1}`      | The first argument (shell-quoted)             |
+| `{$n}`      | The n-th argument                             |
+
+## Ranges
+
+Column ranges can be specified.
+
+| Placeholder    | Description                                                |
+| -------------- | ---------------------------------------------------------- |
+| `{col1..col2}` | Columns from `col1` to `col2` (exclusive), space-separated |
+| `{col..}`      | From column `col` to the end                               |
+| `{..col}`      | From the first column to `col` (exclusive)                 |
+| `{..}`         | All visible columns                                        |
+
+Modifiers (`=`, `+`, `-`) also apply to ranges.
+
+## Examples
+
+### Configuration (`config.toml`)
+
+#### Custom Preview Command
+
+Use `{}` to pass the current item to a previewer like `bat` or `eza`.
+
+```toml
+[[preview.layout]]
+command = "bat --color=always {} || eza -T {}"
+```
+
+#### Keybindings with Shell Execution
+
+You can bind keys to run shell commands.
+
+```toml
+[binds]
+"ctrl-o" = "Execute($EDITOR {})" # Open in editor and return to matchmaker
+"alt-o" = "Become($EDITOR {})" # Open in editor and exit matchmaker
+"ctrl-y" = "Execute(echo -n {} | xclip -sel clip)" # Copy to clipboard
+```
+
+#### Output Formatting
+
+Change how the selected item is printed to stdout when you press enter.
+
+```toml
+[start]
+output_template = "Selected: {}"
+```
+
+### Command Line (CLI)
+
+Output the shell-quoted result.
+
+```
+find . | mm o "{}"
+```
+
+#### Multi-Column Preview
+
+If your input has columns (e.g., from `ls -l`), you can preview a specific column.
+
+```bash
+ls -l | mm d " +" m.max_columns=9 px "echo 'File: {=9}'" h.header_lines 1 m.default_column 9 h.content="Permissions,Hard Links,Owner,Group,Size,Month,Day,Time,Name"
+```
+
+*Note: `{=9}` uses the unquoted value of the 9th column (index 9).*
+
+#### Active Column
+
+The `{!}` placeholder refers to the column currently under focus (specified by `%column_name` in your query).
+
+```bash
+mm px "echo 'You are currently filtering on: {!}'"
+```
+
+#### Index
+
+The `{#}` placeholder resolves to the absolute index of the item.
+
+```bash
+mm px "echo 'You are currently selecting items: #{+#}'"
+```
+
+#### Ranges
+
+Join multiple columns together. `{2..}` joins the 2nd column to the end.
+
+```bash
+ls -l | mm d " +" h.h 1 px "echo 'Metadata: {=2..}'"
+```
+
+*Note: `h.h` is short for `header.header_lines`.*
+
+#### Action on Selection
+
+Execute a command with all selected items when pressing a custom key.
+
+```bash
+touch a b
+mm b.ctrl-x "ExecuteSilent(rm {+}) Reload" x ls # Delete items then reload
+```
+
+## Status Line and Input Prompt Templates
+
+The status line supports dynamic variables, alignment, and layout positioning.
+Status templates can be configured in `[status]` (with `template = "..."`) or dynamically via the `SetStyledStatus` action. Input prompt templates are supported via `SetStyledPrompt`.
+Toast messages (`Toast`/`ToastJoin`) accept the same `{...}` styling syntax, but no variables.
+
+### Styling
+
+You can style parts of the status line and input prompt using the `{fg,bg,..modifiers:text}` syntax.
+Multiple style attributes and modifiers can be comma-separated:
+
+- `{red:Error:}` renders "Error:" in red.
+- `{,blue:Matchmaker}` renders "Matchmaker" in a blue background.
+- `{red,bold,italic:Caution}` renders "Caution" in red, with bold and italic modifiers.
+- `{bg=green,fg=black:OK}` explicit `fg=` and `bg=` color keys.
+
+#### Supported Modifiers
+
+- Positive: `bold`, `dim`, `italic`, `underlined`, `slow_blink`, `rapid_blink`, `reversed`, `hidden`, `crossed_out`
+- Negative (cancels inherited modifiers): `no_bold`, `no_dim`, `no_italic`, `no_underlined`, `no_slow_blink`, `no_rapid_blink`, `no_reversed`, `no_hidden`, `no_crossed_out`
+- Interactive markers: `i` or `interactive` (marks the span as an interaction region for clicks).
+
+### Variables
+
+The following variables are available and must be prefixed with a backslash (`\`):
+
+| Variable | Description                                                    |
+| -------- | -------------------------------------------------------------- |
+| `\r`     | Current row number (1-based), `-` when there is no current row |
+| `\m`     | Number of matched items                                        |
+| `\t`     | Total number of items                                          |
+
+### Alignment and Row Connection
+
+Use `\s` and `\S` to insert flexible whitespace for alignment.
+
+- A single `\s` will expand to fill the available width, pushing subsequent text to the right.
+- If multiple `\s` are used, the available space is distributed equally between them.
+- `\S` increases the distribution denominator without adding any whitespace.
+
+The space available to `\s` depends on `status.row_connection`:
+
+- `Full`: Available whitespace is computed across the full UI width.
+- `Disjoint`: Available whitespace is computed using only the width of the results pane, preventing right-aligned status elements (e.g. `\s\m/\t`) from expanding into or hiding behind the preview pane.
+- `Capped`: The status line sits **inline with the query bar**, right-aligned within the results/picker pane (and always to the left of the preview window when the preview is placed on the right). Its maximum width is bounded by `results_width - RESULTS_MIN_WIDTH`. In this mode, `\s` expands to 0 spaces, and the query bar adjusts its width to prevent overlapping with the status widget.
+
+## Environment Variables
+
+When Matchmaker executes a command (e.g., via `Execute`, `Become`, or a preview command), it injects several environment variables that you can use in your scripts.
+
+| Variable           | FZF Equivalent     | Description                                                                                                                                                                                      |
+| ------------------ | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `MM_LINES`         | `FZF_LINES`        | Height of the terminal                                                                                                                                                                           |
+| `MM_COLUMNS`       | `FZF_COLUMNS`      | Width of the terminal                                                                                                                                                                            |
+| `MM_TOTAL_COUNT`   | `FZF_TOTAL_COUNT`  | Total number of items                                                                                                                                                                            |
+| `MM_MATCH_COUNT`   | `FZF_MATCH_COUNT`  | Number of matched items                                                                                                                                                                          |
+| `MM_SELECT_COUNT`  | `FZF_SELECT_COUNT` | Number of selected items                                                                                                                                                                         |
+| `MM_POS`           | `FZF_POS`          | Current row index (0-indexed cursor position)                                                                                                                                                    |
+| `MM_QUERY`         | `FZF_QUERY`        | Current input query                                                                                                                                                                              |
+| `MM_MODE`          | `FZF_MODE`         | Current mode stack (comma-separated)                                                                                                                                                             |
+| `MM_PREVIEW_INDEX` |                    | The index of the active preview layout                                                                                                                                                           |
+| `MM_OVERRIDE`      |                    | Path of the first applied override                                                                                                                                                               |
+| `MM_STORE`         |                    | Current value stored in state (via `Store` action)                                                                                                                                               |
+| `MM_INDEX`         |                    | Index of populating command (from `additional_commands`). Starts at 0 if first command of `additional_commands` is empty and no input is being piped. Can be set from environment by `_MM_INDEX` |
+
+The `envs` section of your config is also injected.
+
+### Preview Environment
+
+In addition to the above, commands executed within the preview window also receive:
+
+| Variable  | Description                |
+| --------- | -------------------------- |
+| `LINES`   | Height of the preview area |
+| `COLUMNS` | Width of the preview area  |
+
+## Interaction Regions
+
+Interaction regions trigger [semantic actions](binds.md#semantic-triggers) when a status, header, or footer section is clicked.
+
+### Status templates
+
+Status templates can mark clickable spans with the `i` or `interactive` style token. Status `interactions` may then be an ordered action list. Actions are assigned to marked spans from left to right, and each region ends at the marked span's rendered boundary.
+
+Regions are resolved after `\r`, `\m`, `\t`, `\s`, and `\S` substitutions, so dynamic prefixes and terminal-width changes remain aligned.
+
+```toml
+[status]
+template = "{red,i: [X]} {green,interactive: [OK]} \s \m/\t"
+interactions = ["quit", "accept"]
+
+[binds]
+"@quit" = "Quit(1)"
+"@accept" = "Accept"
+```
+
+`i` and `interactive` reserve the `RAPID_BLINK` modifier as an internal marker on status spans. The marker is removed before rendering.
+
+### Coordinate regions
+
+The original `(index, action)` form remains available for status, header, and footer interactions:
+
+```toml
+[status]
+template = "{red: [X]} {green: [OK]} \s \m/\t"
+interactions = [
+    [1, "quit"],
+    [4, ""],
+    [6, "accept"],
+    [11, ""]
+]
+```
+
+`index` is the zero-based horizontal offset. Matchmaker selects the region with the greatest index that is less than or equal to the click position. An empty action disables clicks until the next region.
+
+Header and footer interactions use coordinate regions and accept one region list per rendered line.

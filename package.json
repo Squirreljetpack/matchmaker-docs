@@ -1,0 +1,18 @@
+{
+  "name": "matchmaker-docs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Matchmaker documentation site (VitePress, Linear-style theme)",
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs",
+    "sync-docs": "python3 scripts/sync-docs.py",
+    "icons": "node scripts/generate-icons.js",
+    "generate-icons": "node scripts/generate-icons.js"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.4"
+  }
+}

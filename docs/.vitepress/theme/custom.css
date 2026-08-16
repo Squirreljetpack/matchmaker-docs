@@ -1,0 +1,710 @@
+/* ---------------------------------------------------------------------------
+ * f:ist docs — Authentic Linear.app docs theme
+ * ------------------------------------------------------------------------- */
+
+:root {
+  --vp-font-family-base:
+    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --vp-font-family-mono:
+    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Light mode (Orbital Lab — cleanroom ceramic & telemetry blue-teal) */
+  --vp-c-bg: #eaeef2;
+  --vp-c-bg-alt: #e1e6ec;
+  --vp-c-bg-elv: #f3f5f8;
+  --vp-c-bg-soft: #dce2ea;
+  --vp-c-border: rgba(18, 23, 34, 0.13);
+  --vp-c-divider: rgba(18, 23, 34, 0.09);
+  --vp-c-gutter: rgba(18, 23, 34, 0.05);
+  --vp-c-text-1: #121722;
+  --vp-c-text-2: #3b4557;
+  --vp-c-text-3: #616d82;
+  --vp-c-brand-1: #1b5e8a;
+  --vp-c-brand-2: #144a6e;
+  --vp-c-brand-3: #2973a3;
+  --vp-c-brand-soft: rgba(27, 94, 138, 0.09);
+
+  --vp-c-mute: #dce2ea;
+  --vp-c-mute-hover: #d0d8e2;
+  --vp-c-default-soft: rgba(18, 23, 34, 0.05);
+
+  --vp-code-block-bg: #e1e6ec;
+  --vp-code-line-highlight-color: rgba(27, 94, 138, 0.09);
+
+  /* Card & chip tokens */
+  --linear-card-bg: #f3f5f8;
+  --linear-card-border: rgba(18, 23, 34, 0.13);
+  --linear-card-hover-border: rgba(27, 94, 138, 0.4);
+  --linear-card-hover-bg: #e6ebf1;
+  --linear-chip-bg: #e1e6ec;
+  --linear-chip-border: rgba(18, 23, 34, 0.13);
+}
+
+html.dark {
+  /* Dark mode (Orbital Lab — flight deck obsidian & instrument ice-blue) */
+  --vp-c-bg: #111319;
+  --vp-c-bg-alt: #0c0d12;
+  --vp-c-bg-elv: #161922;
+  --vp-c-bg-soft: #1c202c;
+  --vp-c-border: rgba(148, 163, 184, 0.16);
+  --vp-c-divider: rgba(148, 163, 184, 0.12);
+  --vp-c-gutter: rgba(148, 163, 184, 0.06);
+  --vp-c-text-1: #d5ced9;
+  --vp-c-text-2: #9ca3b4;
+  --vp-c-text-3: #6b7385;
+  --vp-c-brand-1: #74b9e6;
+  --vp-c-brand-2: #92cbee;
+  --vp-c-brand-3: #5aa2d1;
+  --vp-c-brand-soft: rgba(116, 185, 230, 0.12);
+
+  --vp-c-mute: #181c26;
+  --vp-c-mute-hover: #202533;
+  --vp-c-default-soft: rgba(213, 206, 217, 0.05);
+
+  --vp-code-block-bg: #0c0d12;
+  --vp-code-line-highlight-color: rgba(116, 185, 230, 0.12);
+
+  /* Custom card & chip tokens */
+  --linear-card-bg: #161922;
+  --linear-card-border: rgba(148, 163, 184, 0.15);
+  --linear-card-hover-border: rgba(116, 185, 230, 0.38);
+  --linear-card-hover-bg: #1c202c;
+  --linear-chip-bg: #181c26;
+  --linear-chip-border: rgba(148, 163, 184, 0.18);
+}
+
+/* --- Base Body & Typography ---------------------------------------------- */
+
+html, body {
+  background-color: var(--vp-c-bg);
+  color: var(--vp-c-text-1);
+}
+
+body {
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  letter-spacing: -0.012em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Nav Bar ------------------------------------------------------------- */
+
+.VPNavBar {
+  background-color: var(--vp-c-bg) !important;
+  border-bottom: 1px solid var(--vp-c-divider) !important;
+}
+
+@supports (backdrop-filter: blur(16px)) or (-webkit-backdrop-filter: blur(16px)) {
+  .VPNavBar {
+    background-color: rgba(17, 19, 25, 0.85) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  html:not(.dark) .VPNavBar {
+    background-color: rgba(234, 238, 242, 0.88) !important;
+  }
+}
+
+.VPNavBarTitle .title {
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.02em;
+  color: var(--vp-c-text-1);
+}
+
+.VPNavBarMenuLink {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--vp-c-text-2) !important;
+  transition: color 0.15s ease;
+}
+
+.VPNavBarMenuLink:hover,
+.VPNavBarMenuLink.active {
+  color: var(--vp-c-text-1) !important;
+}
+
+/* --- Search Bar (Linear ⌘K trigger) -------------------------------------- */
+
+.VPNavBarSearch .DocSearch-Button,
+.VPLocalSearchBox,
+.vp-local-search {
+  border-radius: 6px !important;
+  border: 1px solid var(--vp-c-border) !important;
+  background: var(--vp-c-bg-soft) !important;
+  font-size: 13px !important;
+  color: var(--vp-c-text-3) !important;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.VPNavBarSearch .DocSearch-Button:hover {
+  border-color: var(--linear-card-hover-border) !important;
+  color: var(--vp-c-text-2) !important;
+}
+
+.VPLocalSearchBox .shell {
+  background: var(--vp-c-bg-elv) !important;
+  border: 1px solid var(--vp-c-border) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* --- Sidebar ------------------------------------------------------------- */
+
+.VPSidebar {
+  background-color: var(--vp-c-bg) !important;
+  border-right: 1px solid var(--vp-c-divider) !important;
+}
+
+.VPSidebarItem.level-0 > .item .text {
+  font-family: var(--vp-font-family-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-3);
+  padding: 14px 0 6px 0;
+}
+
+.VPSidebarItem.level-1 .item {
+  border-radius: 4px;
+  padding: 5px 10px;
+  margin: 1px 0;
+  border-left: 2px solid transparent;
+  transition: color 0.12s ease, background-color 0.12s ease, border-color 0.12s ease;
+}
+
+.VPSidebarItem.level-1 > .item:hover {
+  background: var(--vp-c-default-soft);
+}
+
+.VPSidebarItem.level-1 > .item:hover .text {
+  color: var(--vp-c-text-1);
+}
+
+.VPSidebarItem.level-1.is-active > .item {
+  background: var(--vp-c-brand-soft);
+  border-left-color: var(--vp-c-brand-1);
+}
+
+.VPSidebarItem.level-1.is-active > .item .text {
+  color: var(--vp-c-text-1);
+  font-weight: 600;
+}
+
+.VPSidebarItem.level-1 > .item .text {
+  color: var(--vp-c-text-2);
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+
+/* --- Prose & Content Typography ------------------------------------------ */
+
+.vp-doc {
+  color: var(--vp-c-text-2);
+  font-size: 14.5px;
+  line-height: 1.68;
+}
+
+.vp-doc h1 {
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  color: var(--vp-c-text-1);
+  margin-top: 8px;
+  margin-bottom: 20px;
+  line-height: 1.25;
+}
+
+.vp-doc h2 {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.024em;
+  color: var(--vp-c-text-1);
+  margin-top: 40px;
+  margin-bottom: 14px;
+  padding-top: 0;
+  border-top: none !important;
+  line-height: 1.35;
+}
+
+.vp-doc h3 {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  color: var(--vp-c-text-1);
+  margin-top: 28px;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.vp-doc p {
+  margin-bottom: 16px;
+}
+
+.vp-doc strong {
+  color: var(--vp-c-text-1);
+  font-weight: 600;
+}
+
+.vp-doc a {
+  color: var(--vp-c-brand-2);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.vp-doc a:hover {
+  color: var(--vp-c-brand-1);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.vp-doc ul, .vp-doc ol {
+  padding-left: 20px;
+  margin-bottom: 18px;
+}
+
+.vp-doc li {
+  margin: 6px 0;
+}
+
+.vp-doc li > p {
+  margin-bottom: 6px;
+}
+
+/* --- Inline Code & Code Blocks ------------------------------------------- */
+
+.vp-doc :not(pre) > code {
+  font-family: var(--vp-font-family-mono);
+  font-size: 0.88em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-border);
+  color: var(--vp-c-text-1);
+  font-weight: 450;
+}
+
+.vp-doc div[class*='language-'] {
+  border: 1px solid var(--vp-c-border);
+  border-radius: 6px;
+  background-color: var(--vp-code-block-bg) !important;
+  margin: 18px 0;
+}
+
+.vp-doc div[class*='language-'] pre {
+  padding: 14px 18px;
+}
+
+.vp-doc div[class*='language-'] code {
+  font-family: var(--vp-font-family-mono);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* --- Keyboard Badges (<kbd>) --------------------------------------------- */
+
+kbd,
+.vp-local-search .key,
+.key-badge {
+  font-family: var(--vp-font-family-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--vp-c-bg-soft);
+  border: 1px solid var(--vp-c-border);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+  color: var(--vp-c-text-1);
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  line-height: 1.25;
+  vertical-align: baseline;
+  margin: 0 2px;
+}
+
+/* --- Tables (Linear Style) ----------------------------------------------- */
+
+.vp-doc table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--vp-c-border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 20px 0;
+  font-size: 13.5px;
+  font-variant-numeric: tabular-nums;
+  display: table;
+}
+
+.vp-doc th {
+  background: var(--vp-c-bg-soft);
+  color: var(--vp-c-text-3);
+  font-family: var(--vp-font-family-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--vp-c-border);
+  border-right: none;
+  text-align: left;
+}
+
+.vp-doc td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--vp-c-divider);
+  border-right: none;
+  color: var(--vp-c-text-2);
+  vertical-align: middle;
+}
+
+.vp-doc tr:last-child td {
+  border-bottom: none;
+}
+
+.vp-doc tr:hover td {
+  background: var(--vp-c-default-soft);
+}
+
+.vp-doc td:first-child strong,
+.vp-doc td:first-child code {
+  color: var(--vp-c-text-1);
+}
+
+/* --- Images -------------------------------------------------------------- */
+
+.vp-doc img {
+  border-radius: 8px;
+  border: 1px solid var(--vp-c-border);
+  background: var(--vp-c-bg-elv);
+  margin: 20px 0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Custom Admonitions / Callouts --------------------------------------- */
+
+.vp-doc .custom-block {
+  border-radius: 8px;
+  border: 1px solid var(--vp-c-border);
+  padding: 14px 18px;
+  margin: 20px 0;
+  background: var(--vp-c-bg-soft);
+}
+
+.vp-doc .custom-block.tip {
+  border-color: color-mix(in srgb, var(--vp-c-brand-1) 30%, transparent);
+  background: var(--vp-c-brand-soft);
+}
+
+.vp-doc .custom-block.tip .custom-block-title {
+  color: var(--vp-c-brand-2);
+}
+
+html.dark .vp-doc .custom-block.tip {
+  border-color: rgba(165, 246, 156, 0.28);
+  background: rgba(165, 246, 156, 0.07);
+}
+
+html.dark .vp-doc .custom-block.tip .custom-block-title {
+  color: #a5f69c;
+}
+
+.vp-doc .custom-block.warning {
+  border-color: rgba(234, 179, 8, 0.3);
+  background: rgba(234, 179, 8, 0.08);
+}
+
+.vp-doc .custom-block.danger {
+  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.vp-doc .custom-block-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--vp-c-text-1);
+}
+
+/* --- Right-hand Outline (TOC "On this page") ------------------------------ */
+
+.VPDocOutlineItem .outline-link {
+  font-size: 12.5px;
+  color: var(--vp-c-text-3);
+  transition: color 0.12s ease;
+  line-height: 1.5;
+}
+
+.VPDocOutlineItem .outline-link:hover {
+  color: var(--vp-c-text-1);
+}
+
+.VPDocOutlineItem .outline-link.active {
+  color: var(--vp-c-brand-2);
+  font-weight: 500;
+}
+
+.VPDocOutlineDropdown .header {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-3);
+}
+
+/* --- Prev / Next Footer Navigation --------------------------------------- */
+
+.VPDocFooter .pager-link {
+  border: 1px solid var(--vp-c-border);
+  border-radius: 6px;
+  background: var(--linear-card-bg);
+  padding: 14px 18px;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+}
+
+.VPDocFooter .pager-link:hover {
+  border-color: var(--linear-card-hover-border);
+  background: var(--linear-card-hover-bg);
+}
+
+.VPDocFooter .pager-link .desc {
+  font-family: var(--vp-font-family-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-3);
+}
+
+.VPDocFooter .pager-link .title {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+  margin-top: 4px;
+}
+
+/* =========================================================================
+ * Linear Docs Custom Grid & Card Components
+ * ========================================================================= */
+
+.linear-hero {
+  padding: 12px 0 28px 0;
+  border-bottom: 1px solid var(--vp-c-divider);
+  margin-bottom: 32px;
+}
+
+.linear-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--vp-c-brand-2);
+  background: var(--vp-c-brand-soft);
+  border: 1px solid rgba(94, 106, 210, 0.25);
+  border-radius: 20px;
+  padding: 3px 10px;
+  margin-bottom: 14px;
+}
+
+.linear-hero-title {
+  font-size: 34px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.04em !important;
+  color: var(--vp-c-text-1) !important;
+  margin: 0 0 12px 0 !important;
+  line-height: 1.2 !important;
+}
+
+.linear-hero-subtitle {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--vp-c-text-2);
+  max-width: 680px;
+  margin: 0 0 20px 0;
+}
+
+.linear-quick-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.linear-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--vp-c-text-2);
+  background: var(--linear-chip-bg);
+  border: 1px solid var(--linear-chip-border);
+  border-radius: 4px;
+  padding: 5px 11px;
+  text-decoration: none !important;
+  transition: all 0.15s ease;
+}
+
+.linear-chip:hover {
+  background: var(--vp-c-default-soft);
+  border-color: var(--linear-card-hover-border);
+  color: var(--vp-c-text-1);
+}
+
+.linear-chip svg {
+  width: 14px;
+  height: 14px;
+  opacity: 0.7;
+}
+
+/* --- Section Directory Grid ---------------------------------------------- */
+
+.linear-sections-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+  margin: 28px 0 40px 0;
+}
+
+.linear-section-card {
+  background: var(--linear-card-bg);
+  border: 1px solid var(--linear-card-border);
+  border-radius: 6px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+}
+
+html.dark .linear-section-card {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.linear-section-card:hover {
+  border-color: var(--linear-card-hover-border);
+  background: var(--linear-card-hover-bg);
+}
+
+.linear-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.linear-section-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  background: var(--vp-c-brand-soft);
+  border: 1px solid color-mix(in srgb, var(--vp-c-brand-1) 24%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--vp-c-brand-2);
+  flex-shrink: 0;
+}
+
+.linear-section-icon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.vp-doc .linear-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--vp-c-text-1);
+  margin: 0 !important;
+  line-height: 1.25;
+}
+
+.linear-section-desc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--vp-c-text-3);
+  margin: 0 0 16px 0;
+}
+
+.linear-link-list {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.linear-link-item {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.linear-link-item a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 13.5px;
+  color: var(--vp-c-text-2) !important;
+  text-decoration: none !important;
+  transition: all 0.12s ease;
+}
+
+.linear-link-item a:hover {
+  background: var(--vp-c-default-soft);
+  color: var(--vp-c-text-1) !important;
+}
+
+.linear-link-item .arrow {
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: all 0.12s ease;
+  color: var(--vp-c-text-3);
+}
+
+.linear-link-item a:hover .arrow {
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--vp-c-brand-2);
+}
+
+/* --- Linear Callout Box -------------------------------------------------- */
+
+.linear-callout {
+  background: var(--linear-card-bg);
+  border: 1px solid var(--linear-card-border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 24px 0;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.linear-callout-icon {
+  color: var(--vp-c-brand-2);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.linear-callout-content {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--vp-c-text-2);
+}
+
+.linear-callout-content strong {
+  color: var(--vp-c-text-1);
+}
