@@ -1,7 +1,7 @@
 <div class="linear-hero">
   <h1 class="linear-hero-title">Matchmaker</h1>
   <p class="linear-hero-subtitle">
-    <strong>Matchmaker</strong> (binary <code>mm</code>) is a fast, configurable and intuitive fuzzy searcher for the terminal. Pipe lines in, filter them with fzf-style fuzzy matching, and print the selections back out — with a full TUI, configurable columns, previews, and scripting on top.
+    <strong>Matchmaker</strong> (<code>mm</code>) is a fast, configurable, and intuitive fuzzy searcher for the terminal. Pipe lines or tables in, filter them with fuzzy matching, and print the selections back out: it doesn't sound like much, yet you'd be surprised how often that pattern comes up. Matchmaker is built to get the most out of it, prioritizing configurability and extensibility so complex workflows stay clean and modular. Alongside <a href="https://github.com/Squirreljetpack/matchmaker">too many features to list</a>, it comes with a unique help system, hand-tuned defaults, and a gallery of presets to try, while keeping both the UI and the <a href="./queries#matching-backends-and-scoring">underlying matching engines</a> fast and lightweight.
   </p>
   <div class="linear-quick-chips">
     <a href="./getting-started" class="linear-chip">

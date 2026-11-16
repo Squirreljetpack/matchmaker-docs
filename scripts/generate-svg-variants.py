@@ -213,8 +213,8 @@ def main() -> int:
         "-o",
         "--output",
         type=Path,
-        default=root / "icon.svg",
-        help="Output SVG file path (default: icon.svg in repo root).",
+        default=root / "docs" / "public" / "logo.svg",
+        help="Output SVG file path (default: docs/public/logo.svg).",
     )
     parser.add_argument(
         "--out-dir",
