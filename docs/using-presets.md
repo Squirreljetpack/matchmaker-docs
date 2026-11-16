@@ -137,11 +137,6 @@ Download a single-file preset with `mm --download <name>.toml` and launch it wit
 
 ## Color themes
 
-The `themes` preset collection ships 22 color palettes that override UI colors without touching commands or bindings. You can preview and select themes interactively with `mm -o themes`, or layer a theme onto any workflow with `-o themes/<name>`:
-
-```shell
-mm -o themes
-mm -o git/status -o themes/catppuccin-mocha
-```
+The `themes` preset collection provides purely UI customizations. You can preview and select themes interactively with `mm -o themes`, then copy the settings to your `config.toml` to apply.
 
 <video controls preload="none" poster="./images/theme-tour.png" src="./images/theme-tour.mp4"></video>

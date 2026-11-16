@@ -16,7 +16,7 @@ export default defineConfig({
 	head: [
 		["link", { rel: "icon", type: "image/svg+xml", href: "/matchmaker-docs/favicon.svg" }],
 		["link", { rel: "alternate icon", type: "image/png", href: "/matchmaker-docs/favicon.png" }],
-		["meta", { name: "theme-color", content: "#111319" }],
+		["meta", { name: "theme-color", content: "#08090a" }],
 		["link", { rel: "preconnect", href: "https://fonts.googleapis.com" }],
 		[
 			"link",
