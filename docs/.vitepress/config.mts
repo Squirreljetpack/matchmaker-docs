@@ -75,6 +75,7 @@ export default defineConfig({
 				items: [
 					{ text: "Using the library", link: "/library" },
 					{ text: "Library actions", link: "/library-actions" },
+					{ text: "Benchmarks", link: "/benchmarks" },
 				],
 			},
 		],

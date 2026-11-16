@@ -179,7 +179,7 @@ return table.concat(t, "\n"))'''
 
 When executing commands synchronously within the TUI, Matchmaker applies distinct post-execution policies depending on the action used:
 
-| Action             | Success (`code == 0`) | Non-Zero Exit                | Interrupted / Ctrl+C / Signal                |
+| Action             | Success (`exit 0`)    | Non-Zero Exit                | Interrupted / Ctrl+C / Signal                |
 | :----------------- | :-------------------- | :--------------------------- | :------------------------------------------- |
 | `Execute`          | Returns to TUI        | Returns to TUI               | Returns to TUI                               |
 | `ExecuteOrConfirm` | Returns to TUI        | Displays confirmation prompt | Returns to TUI (no prompt on signal)         |
