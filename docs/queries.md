@@ -54,16 +54,16 @@ Active column focus controls four things in the interface:
 
 Matchmaker sizes visible columns automatically to fit their content and the terminal width, and lets you hide, resize, wrap, or scroll columns interactively:
 
-| Action | Default keys (`--dump-config`) | Effect |
+| Action | Default keys | Effect |
 | --- | --- | --- |
-| `HideColumn([col])` | `alt-\` | Hiding of `col` or the active column (the primary column cannot be hidden) |
-| `UnhideColumn([col])` | `alt-shift-\` | Restoration of `col` or the most recently hidden column |
-| `ExpandColumn([n])` | `alt-=` | Widening of the active column (or 0-based visible column `n`) by 1 cell |
-| `ShrinkColumn([n])` | `alt-hyphen` | Narrowing of the active column (or 0-based visible column `n`) by 1 cell |
-| `ToggleWrap` | `alt-w` | Line-wrapping toggle for result rows (`results.wrap`) |
-| `ToggleHeaderWrap` | `alt-w` | Line-wrapping toggle for header rows (`header.wrap`) |
-| `HScroll(n)` | `alt-left` / `alt-right`, `alt-shift-left` / `alt-shift-right` | Horizontal scroll of result cells by `n` cells (`0` resets) |
-| `VScroll(n)` | `alt-up` / `alt-down`, `alt-shift-up` / `alt-shift-down` | Vertical line scroll inside multi-line result rows (`0` resets) |
+| `HideColumn([col])` | `alt-\` | Hides `col` or the active column (the primary column cannot be hidden) |
+| `UnhideColumn([col])` | `alt-shift-\` | Restores `col` or the most recently hidden column |
+| `ExpandColumn([n])` | `alt-=` | Widens the active column (or 0-based visible column `n`) by 1 cell |
+| `ShrinkColumn([n])` | `alt-hyphen` | Narrows the active column (or 0-based visible column `n`) by 1 cell |
+| `ToggleWrap` | `alt-w` | Toggles line wrapping for result rows (`results.wrap`) |
+| `ToggleHeaderWrap` | `alt-w` | Toggles line wrapping for header rows (`header.wrap`) |
+| `HScroll(n)` | `alt-left` / `alt-right`, `alt-shift-left` / `alt-shift-right` | Scrolls result cells horizontally by `n` cells (`0` resets) |
+| `VScroll(n)` | `alt-up` / `alt-down`, `alt-shift-up` / `alt-shift-down` | Scrolls vertically inside multi-line result rows (`0` resets) |
 
 - **Hidden columns**: Columns can start hidden via `columns.names[].hidden = true` or be hidden at runtime with `HideColumn`. Hiding the currently focused column strips its trailing `%col` selector from the query. Hidden columns are omitted from `{..}` visible-range templates ([Template](/template)) but remain accessible by name or index (such as `{2}` or `{id}`) and can still be queried by typing `%name`.
 - **Width allocation and mouse dragging**: Initial column widths can be seeded with `results.width_overrides` and bounded by `results.min_width` (see [Options](/options)). When `results.column_spacing` is non-zero (default `1`), dragging the spacing gutter between two columns with the mouse resizes the left column in place.
@@ -74,7 +74,7 @@ Matchmaker sizes visible columns automatically to fit their content and the term
 
 By default, rows are ranked by fuzzy match score, with ties broken by arrival order. You can adjust score stability or sort rows by any column at startup (`matcher.sort`, CLI alias `S`) or at runtime:
 
-| Action | Default keys (`--dump-config`) | Effect |
+| Action | Default keys | Effect |
 | --- | --- | --- |
 | `Sort([n])` | `alt-s` | Ascending lexicographic sort on the active column (or 0-based displayed column `n`), or toggle off |
 | `SortNumeric([n])` | `alt-n` | Ascending numeric sort (integers and decimals before text) on the active or `n`-th displayed column, or toggle off |

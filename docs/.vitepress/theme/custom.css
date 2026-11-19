@@ -41,7 +41,7 @@
 }
 
 html.dark {
-  /* Dark mode (Linear #08090a surfaces, Powerline plum/violet highlight, #d5ced9 foreground) */
+  /* Dark mode (Linear #08090a surfaces, logo-blue highlight, #e4eaf1 foreground) */
   --vp-c-bg: #08090a;
   --vp-c-bg-alt: #0e0f11;
   --vp-c-bg-elv: #111215;
@@ -49,20 +49,20 @@ html.dark {
   --vp-c-border: rgba(255, 255, 255, 0.08);
   --vp-c-divider: rgba(255, 255, 255, 0.07);
   --vp-c-gutter: rgba(255, 255, 255, 0.04);
-  --vp-c-text-1: #d5ced9;
-  --vp-c-text-2: #8a8f98;
-  --vp-c-text-3: #565960;
-  --vp-c-brand-1: #9978cb;
-  --vp-c-brand-2: #ab89df;
-  --vp-c-brand-3: #7e61ab;
-  --vp-c-brand-soft: rgba(153, 120, 203, 0.13);
+  --vp-c-text-1: #e4eaf1;
+  --vp-c-text-2: #9aa6b3;
+  --vp-c-text-3: #5f6b78;
+  --vp-c-brand-1: #589ed5;
+  --vp-c-brand-2: #6bb4de;
+  --vp-c-brand-3: #3a7bac;
+  --vp-c-brand-soft: rgba(88, 158, 213, 0.13);
 
   --vp-c-mute: #121316;
   --vp-c-mute-hover: #181a1f;
   --vp-c-default-soft: rgba(255, 255, 255, 0.04);
 
   --vp-code-block-bg: #0d0e11;
-  --vp-code-line-highlight-color: rgba(153, 120, 203, 0.14);
+  --vp-code-line-highlight-color: rgba(88, 158, 213, 0.14);
 
   /* Linear custom tokens */
   --linear-card-bg: #0f1012;

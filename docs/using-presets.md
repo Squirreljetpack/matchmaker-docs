@@ -1,6 +1,6 @@
 # Using presets
 
-Presets are TOML configuration overrides stored in your Matchmaker `presets/` directory. A preset can bundle a populating command, column-splitting rules, preview layouts, and custom keybindings into a self-contained TUI workflow—or adjust visual styling as a reusable color theme.
+A preset bundles a populating command, column-splitting rules, preview layouts, and custom keybindings into a self-contained TUI workflow.
 
 ## Downloading and listing presets
 
@@ -31,8 +31,6 @@ mm --presets
 mm -o presets
 ```
 
-`mm --presets` prints the sorted canonical paths of installed `.toml` presets, omitting `base.toml` inheritance files and collapsing the `themes/` folder to `themes/main.toml`.
-
 ## Applying and layering presets
 
 Pass `-o` (`--override`) to layer a preset onto your base `config.toml`. Relative names without a `.toml` extension resolve against your `presets/` directory (`<name>/main.toml`, `<name>.toml`, or the OS-prefixed variant), or you can pass an explicit `.toml` path:
@@ -50,9 +48,9 @@ mm -o git/status -o patches/git-status
 mm -o rg -o patches/frizbee
 ```
 
-The repository ships two patch presets under `patches/`: `patches/git-status.toml` updates `@open` and `@open_2` to jump to the first changed hunk line in `$EDITOR`, and `patches/frizbee.toml` (also available as `-o fz`) switches the matcher backend to `frizbee`. When you launch a preset from `mm -o presets`, Matchmaker automatically checks for a matching `patches/<name>.toml` (with slashes replaced by hyphens, such as `patches/git-status.toml` for `git/status`) and layers it after the selected preset.
+Launching a preset from `mm -o presets` also layers a matching `patches/<name>.toml` over it when one exists.
 
-See [Options](/options) for how collection fields (`preview.layout`, `columns.names`, and `binds`) merge when overrides are layered.
+See [Options](/options) for how overrides merge.
 
 ### Shell aliases
 
@@ -93,7 +91,7 @@ The `git` collection below exercises custom workflow actions (staging, committin
 
 <video controls preload="none" poster="./images/git.png" src="./images/git.mp4"></video>
 
-## Shipped preset catalogue
+## Preset catalogue
 
 ### Folder collections
 

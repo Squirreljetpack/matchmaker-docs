@@ -4,7 +4,7 @@ A preset turns any command or data source into a reusable Matchmaker workflow. B
 
 ## Minimal preset structure
 
-The shipped `csv.toml` preset is a complete, minimal example: it finds a `.csv` or `.tsv` file in the working directory, splits rows using RFC 4180 CSV rules, promotes the first input line to a sticky table header, and previews the currently focused column (`{!}`):
+The bundled `csv.toml` preset is a complete, minimal example: it finds a `.csv` or `.tsv` file in the working directory, splits rows using RFC 4180 CSV rules, promotes the first input line to a sticky table header, and previews the currently focused column (`{!}`):
 
 ```toml
 # CSV/TSV viewer
@@ -107,7 +107,7 @@ frame = { title = "Source" }
 max = 0
 ```
 
-Because `preview.layout` is merged positionally onto the base `config.toml` (which defines three layouts), setting `max = 0` on unused trailing slots disables them. Use `[previewer]` for runner behavior such as `always_trigger = false` or custom `shell` interpreters; see [Preview](/preview) and [Options](/options).
+Because `preview.layout` is merged positionally, setting `max = 0` on an unused trailing slot disables it. Use `[previewer]` for runner behavior such as `always_trigger = false` or custom `shell` interpreters; see [Preview](/preview) and [Options](/options).
 
 ## Binds, traces, and semantic aliases
 

@@ -7,11 +7,11 @@ Matchmaker reads candidate rows either from standard input or from a configured 
 How `mm` acquires input depends on whether standard input is connected to a terminal:
 
 - **Piped standard input**: When `stdin` is a pipe or redirected file, `mm` reads records directly from `stdin` and ignores `start.command`.
-- **Populating command (`start.command`)**: When `stdin` is a terminal, `mm` spawns `start.command` (CLI alias `x` or `cmd`). In `--dump-config`, this defaults to `fd --strip-cwd-prefix --print0` (falling back to `find . -print0`) with a NUL record separator.
+- **Populating command (`start.command`)**: When `stdin` is a terminal, `mm` spawns `start.command` (CLI alias `x` or `cmd`). This defaults to `fd --strip-cwd-prefix --print0` (falling back to `find . -print0`) with a NUL record separator.
 - **Forcing the command (`--no-read`)**: Passing `--no-read` ignores a piped `stdin` and runs `start.command` anyway, which is useful when invoking `mm` inside a script or subshell whose standard input is already redirected.
 - **Synchronous startup (`start.sync`)**: By default, rows stream in asynchronously while the interface is interactive. Setting `start.sync = true` (`s.sync=true`) waits for the input stream to finish before opening the picker.
 
-`start.command` accepts a shell script, a preset script file (`@file` or `@./file`), or a Lua script (`#!lua` or `@file.lua`) that pushes rows through `inject(line)`. See [Execute](/execute) for command strategies and [Options](/options) for all `[start]` settings.
+`start.command` accepts a shell script, a preset script file (`@file` or `@./file`), or a Lua script (`#!lua` or `@file.lua`) that pushes rows through `inject(line)`; see [Execute](/execute) for command strategies and [Options](/options) for all `[start]` settings.
 
 ```shell
 # Pipe rows from stdin
@@ -59,14 +59,14 @@ You can repopulate the picker in place without exiting the TUI:
 
 | Action / setting | Role |
 | --- | --- |
-| `Reload` | Rerun of the active populating command (`ctrl-r` via `@reload` in `--dump-config`) |
-| `Reload(cmd)` | Replacement of the active populating command with `cmd` and immediate reload |
+| `Reload` | Reruns the active populating command (default `ctrl-r` via `@reload`) |
+| `Reload(cmd)` | Replaces the active populating command with `cmd` and reloads immediately |
 | `start.additional_commands` | List of commands (`s.ax`) available to `ReloadNext` and `ReloadPrev` |
-| `ReloadNext` / `ReloadNext(n)` | Forward step through `additional_commands`, or jump to 0-based command index `n` |
-| `ReloadPrev` | Backward step through `additional_commands` |
-| `results.delay_clear` | Retention of previous rows on screen until the reloaded command produces output (`true` in `--dump-config`) |
+| `ReloadNext` / `ReloadNext(n)` | Steps forward through `additional_commands`, or jumps to 0-based command index `n` |
+| `ReloadPrev` | Steps backward through `additional_commands` |
+| `results.delay_clear` | Keeps previous rows on screen until the reloaded command produces output (default `true`) |
 
-When `start.additional_commands` is non-empty, `mm` seeds `@next` (`["ReloadNext", "ClearQuery"]`) and `@prev` (`["ReloadPrev", "ClearQuery"]`), bound to `alt-]` / `ctrl-shift-n` and `alt-[` / `ctrl-shift-p` (`--dump-config`). If the first element of `additional_commands` is an empty string (`""`), `mm` replaces it with `start.command` so the initial command is included in the rotation:
+When `start.additional_commands` is non-empty, `mm` seeds `@next` (`["ReloadNext", "ClearQuery"]`) and `@prev` (`["ReloadPrev", "ClearQuery"]`), bound to `alt-]` / `ctrl-shift-n` and `alt-[` / `ctrl-shift-p`. If the first element of `additional_commands` is an empty string (`""`), `mm` replaces it with `start.command` so the initial command is included in the rotation:
 
 ```toml
 [start]
@@ -77,7 +77,7 @@ additional_commands = [
 ]
 ```
 
-Each reload clears active multi-selections, kills the previous populating process (unless `start.save_orphans = true`), emits the `Reloaded` lifecycle event, and exports `MM_INDEX` with the 0-based index of the active command in `additional_commands`. Setting `_MM_INDEX` in the environment before launching `mm` selects which entry in `additional_commands` runs first. See [Binds](/binds) for lifecycle events and semantic triggers.
+Each reload clears active multi-selections, kills the previous populating process (unless `start.save_orphans = true`), emits the `Reloaded` lifecycle event, and exports `MM_INDEX` with the 0-based index of the active command in `additional_commands`. Setting `_MM_INDEX` in the environment before launching `mm` selects which entry in `additional_commands` runs first.
 
 ## Splitting rows into columns
 
@@ -94,7 +94,7 @@ Before rows are indexed by the matcher, `columns.split` (CLI alias `d`) divides 
 
 When `columns.names` (`c.n`) is omitted, `mm` generates up to `columns.max` columns (default `6`, clamped to `1`–`16`) named `1`, `2`, and so on. Providing `columns.names` assigns explicit alphanumeric names and per-column flags (`hidden`, `ignore`, `options`). `columns.default` (`c.i`) selects the primary column by name or 1-based index.
 
-To discard malformed or header-only lines during ingestion, set `matcher.require_column` to a 0-based column index; any row where that column is empty or fails to match the split regex is skipped before indexing. See [Queries](/queries) for searching and navigating columns and [Options](/options) for `[columns]` and `[matcher]` configuration.
+To discard malformed or header-only lines during ingestion, set `matcher.require_column` to a 0-based column index; any row where that column is empty or fails to match the split regex is skipped before indexing. See [Queries](/queries) for searching and navigating columns.
 
 ## Headers, footers, and prompt context
 
@@ -102,7 +102,7 @@ Header and footer rows frame the results list with column labels, key hints, or 
 
 - **Streamed header rows (`header.header_lines`, alias `h.h`)**: Consumes the first `N` records from the input stream (and on every `Reload`) before they enter the matcher, splits them with the active `columns.split` rules, and pins them above the results aligned to the table's column widths.
 - **Static header and footer content (`header.content` / `h`, `footer.content`)**: Accepts a single string (drawn across the full pane width) or an array of strings (drawn as individual column cells aligned with the results table).
-- **Runtime updates**: Actions such as `SetHeader`, `PushHeader`, `SetFooter`, `PushFooter`, `SetPrompt`, `SetStyledPrompt`, `SetStatus`, and `SetStyledStatus` update UI chrome dynamically from keybindings or `Reloaded` / `QueryChange` event hooks. See [Template](/template) for status and prompt styling syntax and clickable interaction regions.
+- **Runtime updates**: Actions such as `SetHeader`, `PushHeader`, `SetFooter`, `PushFooter`, `SetPrompt`, `SetStyledPrompt`, `SetStatus`, and `SetStyledStatus` update UI chrome dynamically from keybindings or `Reloaded` / `QueryChange` event hooks; status and prompt styling syntax is covered in [Template](/template).
 
 ```shell
 # Split on runs of spaces, pin the first input line as the table header, and focus column 9

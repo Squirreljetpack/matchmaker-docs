@@ -162,6 +162,18 @@
           <span class="arrow">→</span>
         </a>
       </li>
+      <li class="linear-link-item">
+        <a href="./examples">
+          <span>Examples</span>
+          <span class="arrow">→</span>
+        </a>
+      </li>
+      <li class="linear-link-item">
+        <a href="./benchmarks">
+          <span>Benchmarks</span>
+          <span class="arrow">→</span>
+        </a>
+      </li>
     </ul>
   </div>
 

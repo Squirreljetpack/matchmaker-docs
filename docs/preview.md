@@ -31,16 +31,16 @@ min = 5
 max = 240
 ```
 
-- **Command inheritance**: When a `[[preview.layout]]` entry omits `command`, it keeps the command already active in the preview state. In `--dump-config`, the first layout defines the file preview script on the right (`40%`), while the second and third layouts omit `command` so cycling layouts repositions the pane to the top (`55%`) or widens it on the right (`75%`) without re-specifying the script.
+- **Command inheritance**: A `[[preview.layout]]` entry that omits `command` keeps the command already active in the preview state, so extra layouts can reposition or resize the pane without re-specifying the script.
 - **Per-layout overrides**: Each layout entry can set `side` (`right`, `left`, `top`, `bottom`), `percentage`, `min`, `max` (`max = 0` disables the layout), plus per-layout `frame` and `initial` scroll settings layered over `[preview.frame]` and `[preview.initial]`.
 - **Visibility threshold (`preview.show`)**: Accepts `true`, `false`, or a minimum cell count that the terminal's width (`left`/`right`) or height (`top`/`bottom`) must reach before the preview opens (see [Options](/options)).
 - **Preview environment**: Preview commands run under `previewer.shell` (defaulting to `$SHELL -c`) with `{}` template placeholders expanded ([Template](/template#preview-environment)).
 
-| Action | Default keys (`--dump-config`) | Effect |
+| Action | Default keys | Effect |
 | --- | --- | --- |
-| `SwitchPreview` | `?` | Visibility toggle for the preview pane |
-| `NextPreview` | `alt-/` | Forward cycle to the next enabled layout (`max > 0`) |
-| `PrevPreview` | `alt-shift-/` | Backward cycle to the previous enabled layout |
+| `SwitchPreview` | `?` | Toggles the preview pane |
+| `NextPreview` | `alt-/` | Cycles to the next enabled layout (`max > 0`) |
+| `PrevPreview` | `alt-shift-/` | Cycles to the previous enabled layout |
 
 See [Binds](/binds#preview) for direct layout actions (`SwitchPreview(idx)`, `SetPreview`).
 
@@ -70,7 +70,7 @@ scroll.percentage = 70
 
 Inside the TUI, preview scrolling and wrapping are controlled independently from the results table:
 
-| Action | Default keys (`--dump-config`) | Effect |
+| Action | Default keys | Effect |
 | --- | --- | --- |
 | `PreviewUp(n)` / `PreviewDown(n)` | Mouse wheel on preview | Vertical scroll by `n` lines (default `1`) |
 | `PreviewHalfPageUp` | `shift-pageup` | Upward scroll by half the preview pane height |
@@ -85,7 +85,7 @@ Inside the TUI, preview scrolling and wrapping are controlled independently from
 Beyond the commands configured in `[[preview.layout]]`, several actions let you swap preview content on the fly or inspect long output fullscreen:
 
 - **`Preview(cmd)`**: Replaces the active preview command template with `cmd` and opens the preview pane; triggering `Preview(cmd)` again with the same template toggles the preview closed.
-- **`RunPreview(cmd)`**: Runs a one-off command and displays its output in the preview pane until the selection moves or `SetPreview` restores the layout command. Calling bare `RunPreview` with no argument (`ctrl-shift-l` in `--dump-config`) executes the current preview command in the foreground terminal and returns to the picker.
+- **`RunPreview(cmd)`**: Runs a one-off command and displays its output in the preview pane until the selection moves or `SetPreview` restores the layout command. Calling bare `RunPreview` with no argument (default `ctrl-shift-l`) executes the current preview command in the foreground terminal and returns to the picker.
 - **`Help` (`alt-h`) and `@help` (`F1`)**: `Help` toggles a live keybinding summary inside the preview pane. `@help` pages the active preset's `README.md` (or leading `#` comment header) followed by the resolved keybindings fullscreen in the pager.
 - **`ShowPreview([cmd])` (`ctrl-l`, `F11`)**: Streams the current preview command (or `cmd` when given) into the fullscreen interactive pager without polluting redirected `stdout`, and resumes the picker when you exit the pager with `q`. See [Pager](/pager) for `[pager]` options, external pager fallback (`MM_PAGER` -> `$PAGER` -> `less` -> `more`), and pager keybindings.
 
