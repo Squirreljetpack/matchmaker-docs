@@ -35,22 +35,24 @@ cat Cargo.toml | mm pager
 
 When given paths, `mm pager` dispatches each path in order (and exits `1` if any path failed):
 
-1. **Directory**: renders a built-in two-level tree, or runs `display_directory` from `pager.toml` when set.
-2. **Image**: shows fullscreen in `minus` on a TTY, or prints an `<MM_IMAGE>` header when piped (unless disabled by `PG_IMAGE=false`, `PG_MARKDOWN=true`, `+OFFSET`, or text hints).
-3. **Markdown** (`.md` / `.markdown`, or `PG_MARKDOWN=true`): renders through `[markdown]` in `pager.toml` with async inline images on a TTY or ANSI on piped stdout.
+1. **Directory**: renders a built-in two-level tree, or runs `display_directory` from `pager.toml` when set (`PG_DIRECTORY=false` disables this and exits `1` without output).
+2. **Image**: shows fullscreen in `minus` when interactive (on a TTY or with `PG_INTERACTIVE=true`), or prints an `<MM_IMAGE>` header when piped (unless disabled by `PG_IMAGE=false`, `PG_MARKDOWN=true`, `PG_INTERACTIVE=false`, `+OFFSET`, or text hints).
+3. **Markdown** (`.md` / `.markdown`, or `PG_MARKDOWN=true`): renders through `[markdown]` in `pager.toml` with async inline images when interactive or ANSI on non-interactive stdout.
 4. **Text / Stream**: pipes through `bat` when installed and configured, falling back to plain text.
 
 ### Environment variables
 
-| Variable         | Effect                                                                            |
-| ---------------- | --------------------------------------------------------------------------------- |
-| `PG_RAW=true`    | Skip `bat`, markdown, and image dispatch; pass the raw stream through             |
-| `PG_FLAGS`       | Comma-separated `bat` flags replacing `bat_opts` (`,,` escapes a literal comma)   |
-| `PG_LANG`        | `bat` language override: `-l <value>`                                             |
-| `PG_FILENAME`    | `bat` file name hint: `--file-name <value>` (for language detection on stdin)     |
-| `PG_IMAGE=false` | Disable image dispatch                                                            |
-| `PG_MARKDOWN`    | `true` forces markdown rendering (including for piped stdin); `false` disables it |
-| `HIGHLIGHT_LINE` | 1-based line number passed as `bat --highlight-line <value>`                      |
+| Variable         | Effect                                                                                   |
+| ---------------- | ---------------------------------------------------------------------------------------- |
+| `PG_RAW=true`    | Skip `bat`, markdown, and image dispatch; pass the raw stream through                    |
+| `PG_FLAGS`       | Comma-separated `bat` flags replacing `bat_opts` (`,,` escapes a literal comma)          |
+| `PG_LANG`        | `bat` language override: `-l <value>`                                                    |
+| `PG_FILENAME`    | `bat` file name hint: `--file-name <value>` (for language detection on stdin)            |
+| `PG_IMAGE=false` | Disable image dispatch                                                                   |
+| `PG_DIRECTORY`   | `false` disables directory dispatch: exits `1` without output                            |
+| `PG_MARKDOWN`    | `true` forces markdown rendering (including for piped stdin); `false` disables it        |
+| `PG_INTERACTIVE` | `true` forces interactive paging via `/dev/tty` (or stderr); `false` always dumps stdout |
+| `HIGHLIGHT_LINE` | 1-based line number passed as `bat --highlight-line <value>`                             |
 
 For piped stdin, `bat` is skipped unless `PG_LANG` or `PG_FILENAME` names the content, or `PG_FLAGS` is set alongside `PG_RAW=false`.
 
@@ -71,7 +73,7 @@ Pager settings and markdown styling live in `pager.toml` in matchmaker's configu
 | `line_numbers`            | bool              | `false`                                 | Show line numbers                                                                                                      |
 | `follow`                  | bool              | `false`                                 | Stick to the newest output                                                                                             |
 | `prompt`                  | string (optional) | `"alt-h for help, q to quit"`           | Footer prompt text (`""` hides it)                                                                                     |
-| `horizontal_scroll`       | bool              | `true`                                  | Start with line wrapping off                                                                                           |
+| `wrap`                    | bool              | `false`                                 | Enable line wrapping                                                                                                   |
 | `mouse_horizontal_scroll` | bool              | `false`                                 | Enable horizontal mouse wheel scrolling                                                                                |
 | `smart_case`              | bool              | `true`                                  | Case-sensitive search unless the query has uppercase                                                                   |
 | `smart_changes`           | bool              | `false`                                 | Append `--style=+changes` or `--style=-changes` based on git status                                                    |
