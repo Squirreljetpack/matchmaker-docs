@@ -42,9 +42,8 @@ cargo install matchmaker-cli
 | Tool | Role |
 | --- | --- |
 | `fd` | Default file discovery command (`fd --strip-cwd-prefix --print0`) |
-| `bat` | Syntax-highlighted file previews and default `$PAGER` fallback |
+| `bat` | Syntax highlighting for text files in `mm pager` and previews |
 | `eza` | Directory tree previews (`eza --color=always -T -L 2`) |
-| `chafa` | Terminal image fallback when `mm --image` cannot decode a file natively |
 
 When `$EDITOR` or `$PAGER` is unset in your environment, `mm` automatically selects an installed editor (`hx`, `nvim`, `vim`, `vi`, `nano`, or `notepad` on Windows) and pager (`bat`, `less`, `more`, or `cat`).
 

@@ -3,33 +3,38 @@
 The preview pane can show an image instead of text. The image is drawn with the
 terminal's graphics protocol, keeps its proportions, and can be zoomed and panned while the text around it stays scrollable.
 
-The default configuration already previews files this way: its first preview
-layout starts with `mm --image {1} && exit 0`, so an image file is drawn as one
-and anything else falls through to the text previewer.
+The default configuration previews files with `mm -q pager -- {1}`, which automatically handles images as well as text, markdown, and directories; `mm image` remains available when you want explicit `<MM_IMAGE>` header options or exit-code-`159` probing.
 
 ---
 
 ## The Image Command
 
 ```sh
-mm --image PATH [OPTION...]
+mm image PATH [OPTION...]
 ```
 
-`mm --image` prints an image header for `PATH` and exits `0`. Positional
-arguments after the path are written into that header, so the image is shown with
-those options:
+`mm image` shows `PATH` as an image and exits `0`. The arguments after the
+path are the image's options, written the same way as in an image header, so the
+image is shown with them:
 
 ```sh
-mm --image logo.svg hfit=fill:20 filter=lanczos3
+mm image logo.svg hfit=fill:20 filter=lanczos3
 ```
 
-If this build has no decoder for the file and `chafa` is installed, the file is rendered by `chafa` instead and printed as half-block text. Pass `-q` to keep the command image-or-nothing.
+On a terminal the image is displayed in the interactive pager (builds with the
+`pager` and `image` features), starting in image mode: `+`/`-` zoom, `=` resets,
+`r`/`R` rotate and the arrow keys pan a zoomed image. `hfit`/`vfit` size the
+image within the page and `zoom` magnifies it; the remaining options only apply
+to the preview pane.
 
-When neither can show the file, the exit status is `159` (see `mm --doc other`),
+When stdout is redirected, as it is for a preview command, `mm image` prints
+the image header for `PATH` instead, which the preview pane reads back.
+
+When nothing can show the file, the exit status is `159` (see `mm --doc other`),
 which makes it easy to fall back to text in a preview command:
 
 ```sh
-mm --image {1} && exit 0
+mm image {1} && exit 0
 eza --tree {1}
 ```
 
@@ -107,7 +112,7 @@ scroll = [0, 0]
 header_lines = 0
 ```
 
-- `protocol`: `auto` follows what the terminal reported; the other ones force a 
+- `protocol`: `auto` follows what the terminal reported; the other ones force a
   possibly incompatible protocol.
 - `horizontal_fit`, `vertical_fit`: how each axis is fitted to the pane, see
   [Fitting](#fitting).
@@ -170,5 +175,4 @@ in an SVG may be missing. GIF, BMP, ICO, TIFF and WebP are available with the
 cargo build -p matchmaker-cli --release --features image-all
 ```
 
-Anything this build cannot decode is handed to `chafa` by the image command when
-it is installed. Animated formats show their first frame.
+Animated formats show their first frame.

@@ -87,15 +87,15 @@ Beyond the commands configured in `[[preview.layout]]`, several actions let you 
 - **`Preview(cmd)`**: Replaces the active preview command template with `cmd` and opens the preview pane; triggering `Preview(cmd)` again with the same template toggles the preview closed.
 - **`RunPreview(cmd)`**: Runs a one-off command and displays its output in the preview pane until the selection moves or `SetPreview` restores the layout command. Calling bare `RunPreview` with no argument (default `ctrl-shift-l`) executes the current preview command in the foreground terminal and returns to the picker.
 - **`Help` (`alt-h`) and `@help` (`F1`)**: `Help` toggles a live keybinding summary inside the preview pane. `@help` pages the active preset's `README.md` (or leading `#` comment header) followed by the resolved keybindings fullscreen in the pager.
-- **`ShowPreview([cmd])` (`ctrl-l`, `F11`)**: Streams the current preview command (or `cmd` when given) into the fullscreen interactive pager without polluting redirected `stdout`, and resumes the picker when you exit the pager with `q`. See [Pager](/pager) for `[pager]` options, external pager fallback (`MM_PAGER` -> `$PAGER` -> `less` -> `more`), and pager keybindings.
+- **`ShowPreview([cmd])` (`ctrl-l`, `F11`)**: Streams the current preview command (or `cmd` when given) into the fullscreen interactive pager without polluting redirected `stdout`, and resumes the picker when you exit the pager with `q`. See [Pager](/pager) for `pager.toml` options, external pager fallback (`MM_PAGER` -> `$PAGER` -> `less` -> `more`), and pager keybindings.
 
 ## Image previews
 
-When `previewer.images` is enabled (the default) and a preview command's output begins with an `<MM_IMAGE>` header—most commonly produced by `mm -q --image {1} && exit 0` at the start of a layout script—Matchmaker renders the image directly inside the preview pane using the terminal's graphics protocol (`kitty`, `sixel`, `iterm2`, or `halfblocks` fallback under `preview.image.protocol = "auto"`).
+When `previewer.images` is enabled (the default) and a preview command's output begins with an `<MM_IMAGE>` header—produced by `mm -q pager -- {1}` or `mm -q image -- {1} && exit 0`—Matchmaker renders the image directly inside the preview pane using the terminal's graphics protocol (`kitty`, `sixel`, `iterm2`, or `halfblocks` fallback under `preview.image.protocol = "auto"`).
 
 ```shell
-mm -q --image {1} && exit 0
+mm -q image -- {1} && exit 0
 bat --color=always --style=-numbers -- {1}
 ```
 
-Any text written after the image payload is displayed in the same preview pane: the first `preview.image.header_lines` lines are drawn above the image, and the remaining lines scroll beneath it. While an image is visible in the pane, `PreviewScroll(n)` zooms the image in `0.1x` increments (floored at `1.0x`), `PreviewHScroll(n)` pans horizontally, and `PreviewUp` / `PreviewDown` pan vertically before scrolling into the text below. See [Image](/image) for `mm --image` options, header syntax, and `[preview.image]` fitting rules.
+Any text written after the image payload is displayed in the same preview pane: the first `preview.image.header_lines` lines are drawn above the image, and the remaining lines scroll beneath it. While an image is visible in the pane, `PreviewScroll(n)` zooms the image in `0.1x` increments (floored at `1.0x`), `PreviewHScroll(n)` pans horizontally, and `PreviewUp` / `PreviewDown` pan vertically before scrolling into the text below. See [Image](/image) for `mm image` options, header syntax, and `[preview.image]` fitting rules.

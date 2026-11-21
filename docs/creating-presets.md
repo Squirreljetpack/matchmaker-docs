@@ -38,7 +38,7 @@ For larger presets, keep sections in a consistent order separated by comment hea
 5. `[previewer]` and `[[preview.layout]]`
 6. `[binds]`, with key bindings first and `@` semantic aliases below
 
-When a folder contains several related pickers (such as `git/` or `zellij/`), put shared settings in `base.toml` and inherit them at the top of each sibling preset with `source = "base.toml"`. `mm --presets` automatically omits `base.toml` from the selectable preset list.
+When a folder contains several related pickers (such as `git/` or `zellij/`), put shared settings in `base.toml` and inherit them at the top of each sibling preset with `source = "base.toml"`. `mm preset --list` automatically omits `base.toml` from the selectable preset list.
 
 ## Populating rows and environment
 

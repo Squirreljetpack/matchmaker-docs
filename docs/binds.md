@@ -84,7 +84,7 @@ When `start.additional_commands` is non-empty, `@next` and `@prev` are seeded wi
 
 `@help` is seeded with a default action unless you (or a preset) redefine it: it pages the preset docs (falling back to the file's leading comment block) fullscreen with your configured pager, followed by the bindings.
 
-The default config also defines ordinary aliases such as `@accept`, `@open`, `@reload`, `@print`, and `@copy`; presets commonly add more (e.g. `@return`). These are config conventions, not built-in actions.
+The shipped config also defines ordinary aliases such as `@accept`, `@open`, `@reload`, `@print`, and `@copy`; presets commonly add more (e.g. `@return`). These are config conventions, not built-in actions.
 
 ### Events
 
@@ -247,12 +247,12 @@ Actions are the operations performed when a trigger is activated.
 
 Sort the results by one of the columns in the active row.
 
-| Action                | Description                                                                       |
-| --------------------- | --------------------------------------------------------------------------------- |
-| `Sort(n)`             | Sort ascending by the active or given (0-based display) column lexicographically. |
-| `SortNumeric(n)`      | Same as `Sort` but parses column as a number.                                     |
-| `SortThreshold([n])`  | Set matcher stability to `n`; omitted restores maximum stability.                 |
-| `SortReverse([bool])` | Reverse the non-match scoring function; omitted toggles the direction\*.          |
+| Action                | Description                                                                                       |
+| --------------------- | ------------------------------------------------------------------------------------------------- |
+| `Sort(n)`             | Sort ascending by the active or given (0-based display) column lexicographically.                 |
+| `SortNumeric(n)`      | Same as `Sort` but compares the numbers in the cell in sequence (`0d0h9m` sorts before `0d1h0m`). |
+| `SortThreshold([n])`  | Set matcher stability to `n`; omitted restores maximum stability.                                 |
+| `SortReverse([bool])` | Reverse the non-match scoring function; omitted toggles the direction\*.                          |
 
 \*: This is not the same as reversing the sort direction.
 

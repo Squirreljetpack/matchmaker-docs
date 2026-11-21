@@ -5,7 +5,7 @@ Matchmaker supports multiple execution strategies for running commands, generati
 > [!IMPORTANT]
 >
 > However broad the following section is, for the most part it only exists so that matchmaker can act consistently with respect to Lua support.
-> You can almost always just use simple inline scripts (the *shell command* strategy), for which you should consult the [template docs](/template) instead.
+> You can almost always just use simple inline scripts (the *shell command* strategy), for which you should consult the [template docs](template.md) instead.
 
 ---
 
@@ -13,13 +13,13 @@ Matchmaker supports multiple execution strategies for running commands, generati
 
 Every command string (except preview layout commands) is classified into one of four execution strategies based on its prefix:
 
-| Prefix / Shape        | Strategy            | Description                                                                                                                                                                                       |
-| :-------------------- | :------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `command ...`         | **Shell Command**   | Run via the configured shell (`start.shell` or `$SHELL -c`). Supports `{}` [template expansions](/template). |
-| `@path [args...]`     | **Script File**     | Runs `path` through the configured shell (`start.shell` or `$SHELL`) with `args`. Relative paths resolve against the preset's directory.                                                           |
-| `@./path [args...]`   | **Direct File**     | Executes the file at `path` itself (the kernel honors its shebang; the file must be executable). Relative paths resolve against the preset's directory.                                            |
-| `#!lua ...`           | **Inline Lua**      | Runs inline Lua script on the internal Lua runtime with access to global `state` and `env` tables.                                                                                                |
-| `@file.lua [args...]` | **Lua Script File** | Runs `file.lua` on the internal Lua runtime, passing `args` as varargs (`...`). Relative paths resolve against the preset directory.                                                              |
+| Prefix / Shape        | Strategy            | Description                                                                                                                                             |
+| :-------------------- | :------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `command ...`         | **Shell Command**   | Run via the configured shell (`start.shell` or `$SHELL -c`). Supports `{}` [template expansions](template.md).                                          |
+| `@path [args...]`     | **Script File**     | Runs `path` through the configured shell (`start.shell` or `$SHELL`) with `args`. Relative paths resolve against the preset's directory.                |
+| `@./path [args...]`   | **Direct File**     | Executes the file at `path` itself (the kernel honors its shebang; the file must be executable). Relative paths resolve against the preset's directory. |
+| `#!lua ...`           | **Inline Lua**      | Runs inline Lua script on the internal Lua runtime with access to global `state` and `env` tables.                                                      |
+| `@file.lua [args...]` | **Lua Script File** | Runs `file.lua` on the internal Lua runtime, passing `args` as varargs (`...`). Relative paths resolve against the preset directory.                    |
 
 > [!NOTE]
 > Lua strategies require the `mlua` cargo feature (enabled by default). When disabled, `#!lua` falls back to Shell, and `@*.lua` falls back to Direct File.
@@ -31,21 +31,23 @@ Every command string (except preview layout commands) is classified into one of 
 
 ## Feature & Action Support Matrix
 
-Different contexts in Matchmaker use command strategies in specific ways:
+Different contexts in Matchmaker run commands and differ in what they do with the result:
 
-| Context / Action                                          | Shell | `@file` | `#!lua` | `@file.lua` | Output / Result Handling                                         |
-| :-------------------------------------------------------- | :---: | :-----: | :-----: | :---------: | :--------------------------------------------------------------- |
-| `Execute`, `ExecuteSilent`, `ExecuteAsync`, `ExecuteThen` |   ✓   |    ✓    |    ✓    |      ✓      | Exit code determining success / continuation                     |
-| `ExecuteOrConfirm`, `ExecuteAndQuit`                      |   ✓   |    ✓    |    ✓    |      ✓      | Exit code determining prompt vs. quit policy                     |
-| `Become`, `BecomeSilent`                                  |   ✓   |    ✓    |    —    |      —      | Replaces Matchmaker process (`exec`)                             |
-| `BecomeOrConfirm`, `BecomeOrResume`                       |   ✓   |    ✓    |    —    |      —      | Replaces process with exit code recovery policy                  |
-| `Copy`, `CopyAsync`                                       |   ✓   |    ✓    |    ✓    |      ✓      | Shell/File captures `stdout`; Lua uses script **return value**   |
-| `Transform`, `TransformConfig`                            |   ✓   |    ✓    |    ✓    |      ✓      | Shell/File parses `stdout`; Lua parses script **return value**   |
-| `start.command` & `Reload` / `ReloadNext` / `ReloadPrev`  |   ✓   |    ✓    |    ✓    |      ✓      | Shell/File reads piped `stdout`; Lua calls global `inject(line)` |
-| `start.directory` (when `exec = true`)                    |   ✓   |    ✓    |    ✓    |      ✓      | Shell/File captures `stdout`; Lua uses script **return value**   |
-| Dynamic `[envs]` (when `exec = true`)                     |   ✓   |    ✓    |    ✓    |      ✓      | Shell/File captures `stdout`; Lua uses script **return value**   |
-| `--list` & `--list=<ARG>`                                 |   ✓   |    ✓    |    ✓    |      ✓      | Runs command directly outside TUI                                |
-| **`preview.layout[].command`**                            | **✓** |  **—**  |  **—**  |    **—**    | **Strictly Shell execution with `{}` template expansion**        |
+| Context / Action                                          | Output / Result Handling                                      |
+| :-------------------------------------------------------- | :------------------------------------------------------------ |
+| `Execute`, `ExecuteSilent`, `ExecuteAsync`, `ExecuteThen` | Exit code determines success / continuation                   |
+| `ExecuteOrConfirm`, `ExecuteAndQuit`                      | Exit code determines prompt vs. quit policy                   |
+| `Become`, `BecomeSilent`                                  | Replaces the process; the command's exit code becomes `mm`'s  |
+| `BecomeOrConfirm`, `BecomeOrResume`                       | Exit code feeds the quit/prompt/resume policy (`100` resumes) |
+| `Copy`, `CopyAsync`                                       | Captures the command's output                                 |
+| `Transform`, `TransformConfig`                            | Parses the command's output                                   |
+| `start.command` & `Reload` / `ReloadNext` / `ReloadPrev`  | Reads the command's output as lines                           |
+| `start.directory` (when `exec = true`)                    | Captures the command's output                                 |
+| Dynamic `[envs]` (when `exec = true`)                     | Captures the command's output                                 |
+| `--list` & `--list=<ARG>`                                 | Runs the command directly, outside the TUI                    |
+
+> [!NOTE]
+> `preview.layout[].command` is the exception: it is always run as a shell command with `{}` template expansion, so the `@file`, `@./file` and `#!lua` prefixes are not interpreted there.
 
 ---
 
@@ -56,10 +58,11 @@ Commands prefixed with `@` run a file stored next to the preset:
 ```toml
 [binds]
 "ctrl-o" = "Execute(@open_file.sh {file})"
-"ctrl-y" = "Copy(@format_item.py '{name}' '{path}')"
+"ctrl-y" = "Copy(@format_item.py {name} {path})"
 ```
 
 - **Path Resolution**: Relative paths resolve against the directory of the first applied preset (`MM_OVERRIDE` parent). Absolute paths are used as-is.
+- **Templates**: placeholders expand in the arguments before they are split, exactly as in a shell payload (`{name}` is already shell-quoted, so write it bare rather than wrapped in quotes). A multi-selection such as `{+id}` becomes one argument per selection.
 - **Argument Preservation**: Arguments are split by whitespace. Single quotes (`'arg with spaces'`) preserve whitespace within arguments without shell interpolation.
 - **Interpreter**: The configured shell (`start.shell` or `$SHELL`) reads the file as source in its own language; write the file in that shell's dialect, or use `@./` (below) to select the interpreter via shebang.
 
@@ -81,6 +84,20 @@ command = "@./zellij.sh sessions"
 ## Lua Runtime (`mlua`)
 
 Each Lua execution runs on a fresh, isolated Lua 5.4 VM. Concurrent actions (such as `ExecuteAsync` background tasks or `ExecuteSilent` threads) never share or block on VM state.
+
+Every VM carries Matchmaker's portable helper modules, each installed both as a global and in `package.preload` (so `require("path")` and the `path` global are the same table):
+
+| Module       | Functions                                                                                                                                      |
+| :----------- | :--------------------------------------------------------------------------------------------------------------------------------------------- |
+| `path`       | `parent`, `base`, `stem`, `ext`, `join`, `is_file`, `is_dir`, `is_empty`, `exists`, `lexists`, `rel`, `expand_tilde`                           |
+| `fs`         | `stat`, `read`, `write`, `readdir`, `mkdir`, `remove`, `copy`, `rename`, `symlink`, `readlink`, `canonicalize`, `chmod`, `tempdir`, `tempfile` |
+| `proc`       | `run`, `spawn`, `exec`, `has`                                                                                                                  |
+| `util`       | `sleep`, `uuid`, `timestamp`, `json_encode`, `json_decode`, `toml_encode`, `toml_decode`, `shq`, `split_args`                                  |
+| `lunacolors` | ANSI color and styling helpers, also available as `Lunacolors`                                                                                 |
+
+The `input` module (`prompt`, `confirm`, `select`) drives the terminal, so only blocking interactive actions (`Execute`, `ExecuteOrConfirm`, `ExecuteAndQuit`, `Become`, `BecomeSilent`, `BecomeOrConfirm`, `BecomeOrResume`, and `--list=N@action`) get it; it is `nil` in payloads that run unattended — `ExecuteAsync`, `ExecuteSilent`, `start.command`, `Reload`, and the capture/injection hooks used for transforms, `[envs]`, and `--list` row production.
+
+`proc.exec(prog, [args], [opts])` never returns: it replaces the Matchmaker process the way a shell `Become` does (on Windows it spawns the payload, waits, and exits with its status). A Lua `Become` payload that hands the terminal to another program should use it — `proc.run` keeps the parent alive, so chaining through it stacks one whole Matchmaker per hop, while `proc.exec` keeps the chain flat. `proc.spawn` is fire-and-forget: its children are reaped in the background.
 
 ### Inline Scripts (`#!lua`)
 
@@ -179,7 +196,7 @@ return table.concat(t, "\n"))'''
 
 What happens to the picker after a synchronous command exits depends on the action:
 
-| Action             | Success (`exit 0`)    | Non-Zero Exit                | Interrupted / Ctrl+C / Signal                |
+| Action             | Success (`code == 0`) | Non-Zero Exit                | Interrupted / Ctrl+C / Signal                |
 | :----------------- | :-------------------- | :--------------------------- | :------------------------------------------- |
 | `Execute`          | Returns to TUI        | Returns to TUI               | Returns to TUI                               |
 | `ExecuteOrConfirm` | Returns to TUI        | Displays confirmation prompt | Returns to TUI (no prompt on signal)         |
@@ -190,4 +207,3 @@ What happens to the picker after a synchronous command exits depends on the acti
 
 > [!NOTE]
 > Custom helper scripts invoked via `BecomeOrConfirm` can exit with code `100` to instruct Matchmaker to resume the interactive picker without relying on user interrupts.
-

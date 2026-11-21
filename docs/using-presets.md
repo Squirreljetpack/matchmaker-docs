@@ -4,30 +4,30 @@ A preset bundles a populating command, column-splitting rules, preview layouts, 
 
 ## Downloading and listing presets
 
-Fetch presets from the upstream repository into `~/.config/matchmaker/presets/` (or your platform's config directory) with `mm --download`:
+Fetch presets from the upstream repository into `~/.config/matchmaker/presets/` (or your platform's config directory) with `mm preset --download`:
 
 ```shell
 # Download a preset collection folder
-mm --download git
+mm preset --download git
 
 # Download a single top-level preset file
-mm --download rg.toml
+mm preset --download rg.toml
 
 # Download all top-level presets
-mm --download
+mm preset --download
 ```
 
 <details>
-<summary>How mm --download handles platform files, permissions, and LFS assets</summary>
+<summary>How mm preset --download handles platform files, permissions, and LFS assets</summary>
 
 When downloading a folder or file, `mm` filters platform-prefixed files (`linux.`, `macos.`, `unix.`, `win.`) to match your operating system and strips the prefix on disk. Helper scripts with a valid `#!` shebang and compiled helper binaries automatically receive executable permissions on Unix, and Git LFS data files (such as the compressed tables in `dict` and `unicode`) are fetched from the media endpoint.
 
 </details>
 
-List every installed preset on disk with `mm --presets`, or launch the interactive preset picker once `presets.toml` is downloaded:
+List every installed preset on disk with `mm preset --list`, or launch the interactive preset picker once `presets.toml` is downloaded:
 
 ```shell
-mm --presets
+mm preset --list
 mm -o presets
 ```
 
@@ -95,7 +95,7 @@ The `git` collection below exercises custom workflow actions (staging, committin
 
 ### Folder collections
 
-Download a collection with `mm --download <folder>` and run pickers with `mm -o <folder>/<preset>` (or `mm -o <folder>` when `main.toml` is present):
+Download a collection with `mm preset --download <folder>` and run pickers with `mm -o <folder>/<preset>` (or `mm -o <folder>` when `main.toml` is present):
 
 | Folder | Purpose |
 | --- | --- |
@@ -121,7 +121,7 @@ Download a collection with `mm --download <folder>` and run pickers with `mm -o 
 
 ### Standalone presets
 
-Download a single-file preset with `mm --download <name>.toml` and launch it with `mm -o <name>`:
+Download a single-file preset with `mm preset --download <name>.toml` and launch it with `mm -o <name>`:
 
 | File | Purpose |
 | --- | --- |

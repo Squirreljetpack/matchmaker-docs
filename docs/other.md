@@ -100,8 +100,6 @@ mm --list="0@toggle extension"        # run the alias's Execute/Become actions
 ```
 
 - `N` (and the preview index `M`) are 0-based.
-- The value must be joined with `=` — a separate argument after `--list` is parsed
-  as a config override.
 - `TEMPLATE` uses the full template syntax: see `mm --doc template`.
 - Items are ordered exactly as the matcher would display them (with an empty query,
   all items are matched), so index `0` is the item Enter would accept first.
@@ -124,11 +122,11 @@ Remember to escape any template specifiers, for example: `jq '((map(select(.type
 
 ### Documentation
 
-`mm --doc <DOC>` renders markdown through the [`[markdown]` skin](options.md#markdown-markdown) and pages it when a pager is available. Run `mm --doc` without a value to list the builtin docs:
+`mm --doc <DOC>` renders built-in documentation through the `[markdown]` skin in `pager.toml` (`mm --doc pager`) and pages it when stdout is a terminal:
 
-- a builtin doc: `options`, `binds`, `template`, `execute`, `other`, `pager`, `image`
-- a path to a markdown file
-- `-` to read the markdown from stdin, e.g. `cat README.md | mm --doc -`
+- `options`, `binds`, `template`, `execute` (`lua`), `other`, `pager`, `image`
+
+To render and page arbitrary markdown files or piped markdown (`cat README.md | PG_MARKDOWN=true mm pager`), use `mm pager`.
 
 ### Exit codes
 
@@ -140,4 +138,4 @@ that range.
 - 144: No Match with a chunk error
 - 11: Start Error
 - 100: Signal to resume from BecomeOrConfirm (when emitted by spawned scripts)
-- 159: No image support (`--image` could not decode the path and `chafa` was not used)
+- 159: No image support (`mm image` could not decode or display the path)
