@@ -35,7 +35,7 @@ cat Cargo.toml | mm pager
 
 When given paths, `mm pager` dispatches each path in order (and exits `1` if any path failed):
 
-1. **Directory**: runs `display_directory` from `pager.toml` when non-empty.
+1. **Directory**: renders a built-in two-level tree, or runs `display_directory` from `pager.toml` when set.
 2. **Image**: shows fullscreen in `minus` on a TTY, or prints an `<MM_IMAGE>` header when piped (unless disabled by `PG_IMAGE=false`, `PG_MARKDOWN=true`, `+OFFSET`, or text hints).
 3. **Markdown** (`.md` / `.markdown`, or `PG_MARKDOWN=true`): renders through `[markdown]` in `pager.toml` with async inline images on a TTY or ANSI on piped stdout.
 4. **Text / Stream**: pipes through `bat` when installed and configured, falling back to plain text.
@@ -65,19 +65,19 @@ pages an arbitrary template instead of the current preview command.
 
 Pager settings and markdown styling live in `pager.toml` in matchmaker's configuration directory (next to `config.toml`; `~/.config/matchmaker/pager.toml` on Linux).
 
-| Key                       | Type              | Default                                 | Description                                                                                                         |
-| ------------------------- | ----------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `bat_opts`                | list of strings   | `["--color=always", "--style=changes"]` | Arguments passed to `bat` in `mm pager`; `[]` disables `bat`                                                        |
-| `line_numbers`            | bool              | `false`                                 | Show line numbers                                                                                                   |
-| `follow`                  | bool              | `false`                                 | Stick to the newest output                                                                                          |
-| `prompt`                  | string (optional) | `"alt-h for help, q to quit"`           | Footer prompt text (`""` hides it)                                                                                  |
-| `horizontal_scroll`       | bool              | `true`                                  | Start with line wrapping off                                                                                        |
-| `mouse_horizontal_scroll` | bool              | `false`                                 | Enable horizontal mouse wheel scrolling                                                                             |
-| `smart_case`              | bool              | `true`                                  | Case-sensitive search unless the query has uppercase                                                                |
-| `smart_changes`           | bool              | `false`                                 | Append `--style=+changes` or `--style=-changes` based on git status                                                 |
-| `copy_on_select`          | bool              | `false`                                 | Copy the mouse selection on release                                                                                 |
-| `display_directory`       | list of strings   | `[]`                                    | Command argv run for directory paths (directory path appended); empty disables                                      |
-| `image_protocol`          | string            | `"auto"`                                | Graphics protocol for standalone `mm pager` / `mm image` (`auto`, `halfblocks`, `sixel`, `kitty`, `iterm2`, `none`) |
+| Key                       | Type              | Default                                 | Description                                                                                                            |
+| ------------------------- | ----------------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `bat_opts`                | list of strings   | `["--color=always", "--style=changes"]` | Arguments passed to `bat` in `mm pager`; `[]` disables `bat`                                                           |
+| `line_numbers`            | bool              | `false`                                 | Show line numbers                                                                                                      |
+| `follow`                  | bool              | `false`                                 | Stick to the newest output                                                                                             |
+| `prompt`                  | string (optional) | `"alt-h for help, q to quit"`           | Footer prompt text (`""` hides it)                                                                                     |
+| `horizontal_scroll`       | bool              | `true`                                  | Start with line wrapping off                                                                                           |
+| `mouse_horizontal_scroll` | bool              | `false`                                 | Enable horizontal mouse wheel scrolling                                                                                |
+| `smart_case`              | bool              | `true`                                  | Case-sensitive search unless the query has uppercase                                                                   |
+| `smart_changes`           | bool              | `false`                                 | Append `--style=+changes` or `--style=-changes` based on git status                                                    |
+| `copy_on_select`          | bool              | `false`                                 | Copy the mouse selection on release                                                                                    |
+| `display_directory`       | list of strings   | unset                                   | Command argv run for directory paths (directory path appended); unset renders a built-in two-level tree; `[]` disables |
+| `image_protocol`          | string            | `"auto"`                                | Graphics protocol for standalone `mm pager` / `mm image` (`auto`, `halfblocks`, `sixel`, `kitty`, `iterm2`, `none`)    |
 
 ### `[markdown]` section
 
