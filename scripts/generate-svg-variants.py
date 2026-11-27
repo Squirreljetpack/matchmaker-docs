@@ -174,11 +174,11 @@ def generate_ribbon_svg(palette: list[dict[str, str]], turns: int = 4) -> str:
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {total_w:.0f} {total_h:.0f}" '
         f'width="{total_w:.0f}" height="{total_h:.0f}">\n'
         f"  <defs>\n    " + "\n    ".join(defs) + "\n  </defs>\n"
-        f'  <g clip-path="url(#ribbon-clip)">\n'
-        f'    <g id="back-segments">\n      ' + "\n      ".join(back_paths) + "\n    </g>\n"
-        f'    <g id="front-segments">\n      ' + "\n      ".join(front_paths) + "\n    </g>\n"
-        f"  </g>\n"
-        f"</svg>\n"
+        '  <g clip-path="url(#ribbon-clip)">\n'
+        '    <g id="back-segments">\n      ' + "\n      ".join(back_paths) + "\n    </g>\n"
+        '    <g id="front-segments">\n      ' + "\n      ".join(front_paths) + "\n    </g>\n"
+        "  </g>\n"
+        "</svg>\n"
     )
 
 

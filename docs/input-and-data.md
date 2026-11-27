@@ -64,7 +64,7 @@ You can repopulate the picker in place without exiting the TUI:
 | `start.additional_commands` | List of commands (`s.ax`) available to `ReloadNext` and `ReloadPrev` |
 | `ReloadNext` / `ReloadNext(n)` | Steps forward through `additional_commands`, or jumps to 0-based command index `n` |
 | `ReloadPrev` | Steps backward through `additional_commands` |
-| `results.delay_clear` | Keeps previous rows on screen until the reloaded command produces output (default `true`) |
+| `results.delay_clear_ms` | Keeps previous rows on screen while the reloaded command produces output, for at most this many milliseconds (default `250`, `0` clears immediately) |
 
 When `start.additional_commands` is non-empty, `mm` seeds `@next` (`["ReloadNext", "ClearQuery"]`) and `@prev` (`["ReloadPrev", "ClearQuery"]`), bound to `alt-]` / `ctrl-shift-n` and `alt-[` / `ctrl-shift-p`. If the first element of `additional_commands` is an empty string (`""`), `mm` replaces it with `start.command` so the initial command is included in the rotation:
 

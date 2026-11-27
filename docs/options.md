@@ -250,7 +250,7 @@ exact_match_bonus = 16
 - `max_height`: (number) Maximum row height. VScroll/Preview can still show the full result; 0 disables the limit.
 - `show_skipped`: (bool) Show rows skipped by the result-height limit.
 - `vscroll_current_only`: (bool) Restrict vertical scrolling to the current row.
-- `delay_clear`: (bool) Keep the previous results visible while a reload is still loading input instead of clearing the table; it is cleared once a result arrives or the worker settles.
+- `delay_clear_ms`: (number) Keep the previous results visible for up to this many milliseconds while a reload is still loading input instead of briefly clearing the table; the table is rebuilt once a result arrives or the worker settles, and is cleared when the hold expires. `0` clears immediately (default 250).
 - `uniformly_truncate_columns`: (bool) Truncate row columns uniformly instead of truncating each column independently.
 - `v`, `vertical`, `stacked_columns`: (bool) Display columns stacked vertically instead of across.
 - `separator`, `hr`: (`none`, `empty`, `light`, `normal`, `heavy`, `dashed`) Separator between rows.
